@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Upload and Analyze - Glioma Classifier{% endblock %}
+{% block content %}
+<div class="upload-card">
+  <h2>Upload MRI Image for Tumor Classification</h2>
+  {% if error %}
+    <p class="error-msg">{{ error }}</p>
+  {% endif %}
+  <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".jpg,.jpeg,.png" required />
+    <button type="submit" class="primary-btn">Analyze</button>
+  </form>
+  {% if filename %}
+    <section class="result-section">
+      <div class="images-container">
+        <div class="image-box">
+          <h3>Original Image</h3>
+          <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded Image" class="result-img" />
+        </div>
+        {% if result_image %}
+        <div class="image-box">
+          <h3>Grad-CAM Heatmap Overlay</h3>
+          <img src="{{ url_for('result_file', filename=result_image) }}" alt="Grad-CAM Image" class="result-img" />
+          <a href="{{ url_for('result_file', filename=result_image) }}" download class="download-btn">Download Heatmap</a>
+        </div>
+        {% endif %}
+      </div>
+      <article class="prediction-details">
+        <h3>Prediction</h3>
+        <p><strong>Tumor Type:</strong> {{ prediction|capitalize }}</p>
+        <p><strong>Confidence:</strong> {{ pred_prob }}%</p>
+        {% if tumor_percentage is not none and tumor_stage %}
+        <p><strong>Tumor Coverage:</strong> {{ tumor_percentage }}%</p>
+        <p><strong>Tumor Stage:</strong> {{ tumor_stage }}</p>
+        {% endif %}
+      </article>
+      <!-- Back button to return to upload-form -->
+      <button onclick="window.location.href='{{ url_for('upload_file') }}'" class="secondary-btn" style="margin-right:10px;">Back to Upload</button>
+      <!-- Exit/Close button to try to exit tab -->
+      <button onclick="window.close()" class="secondary-btn">Exit</button>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

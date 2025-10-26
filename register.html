@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Register - Glioma Classifier{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h2>Register</h2>
+  {% if error %}
+    <p class="error-msg">{{ error }}</p>
+  {% endif %}
+  <form method="POST" action="{{ url_for('register') }}">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required autofocus />
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Choose a password" required />
+    <button type="submit" class="primary-btn">Register</button>
+    <button onclick="window.history.back()" class="secondary-btn">Back</button>
+    <button onclick="window.close()" class="secondary-btn">Exit</button>
+
+  </form>
+  <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+</div>
+{% endblock %}
